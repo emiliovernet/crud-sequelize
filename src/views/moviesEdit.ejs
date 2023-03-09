@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title class="titulo">Editar Película</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <figure>
+        <img src="/img/logo-DH.png" alt="Logo Digital House">
+      </figure>
+    <h1 class="titulo">Película a Editar: <%=  movie.title %></h1>
+    <section class="formulario">
+        <form action="/movies/<%= movie.id %>?_method=PUT" method="POST">
+
+            
+
+            <label for="title">Title</label>
+            <p><input type="text" name="title" id="" value="<%= movie.title %>"></p>
+            <% if (locals.errors && locals.errors.title) { %>
+                <p style="color:red"><%= errors.title.msg %></p>
+            <% } %>
+            <label for="rating">Rating </label>
+            <p><input type="number" name="rating" id="" value="<%=  movie.rating %>" > </p>
+            <% if (locals.errors && locals.errors.rating) { %>
+                <p style="color:red"><%= errors.rating.msg %></p>
+            <% } %>
+            <label for="awards">Awards </label>
+            <p><input type="number" name="awards" id="" value="<%=  movie.awards %>" ></p>
+            <% if (locals.errors && locals.errors.awards) { %>
+                <p style="color:red"><%= errors.awards.msg %></p>
+            <% } %>
+            <label for="release_date">Release date </label>
+            <p><input type="date" name="release_date" id="" value="<%=  movie.release_date %>"></p>
+            <% if (locals.errors && locals.errors.release_date) { %>
+                <p style="color:red"><%= errors.release_date.msg %></p>
+            <% } %>
+            <label for="length">Length </label>
+            <p><input type="number" name="length" id="" value="<%=  movie.length %>"></p>
+            <% if (locals.errors && locals.errors.length) { %>
+                <p style="color:red"><%= errors.length.msg %></p>
+            <% } %>
+
+            <br>
+            <p> <button class="botonAgregar" type="submit">Actualizar</button>
+        
+            <a  class="botonVolver" href="/movies">Listado de Películas</a></p>
+        </form>
+    </section>
+</body>
+
+</html>
