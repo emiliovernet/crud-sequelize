@@ -46,7 +46,6 @@ const controller = {
   },
 
   create: async (req, res) => {
-
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -82,9 +81,8 @@ const controller = {
   },
 
   update: async (req, res) => {
-
     const errors = validationResult(req);
-    
+
     const movie = {
       title: req.body.title,
       rating: req.body.rating,
@@ -94,11 +92,11 @@ const controller = {
     };
 
     if (!errors.isEmpty()) {
-      return res.render('moviesEdit',{
+      return res.render("moviesEdit", {
         errors: errors.mapped(),
-        movie: movie
+        movie: movie,
       });
-    };
+    }
 
     try {
       await db.Movie.update(movie, { where: { id: req.params.id } });
@@ -107,13 +105,23 @@ const controller = {
       return res.send({ error });
     }
   },
-  
-  delete: function (req, res) {
-    // TODO
+
+  delete: async (req, res) => {
+    try {
+      const movie = await db.Movie.findByPk(req.params.id);
+      res.render("moviesDelete", { Movie: movie });
+    } catch (error) {
+      return res.send({ error });
+    }
   },
 
-  destroy: function (req, res) {
-    // TODO
+  destroy: async (req, res) => {
+    try {
+        await db.Movie.destroy({ where: { id: req.params.id } });
+        res.redirect('/movies');    
+    } catch (error) {
+        return res.send(error);
+    }
   },
 };
 
