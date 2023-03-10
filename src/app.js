@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override')
+const session = require("express-session")
 
 const indexRouter = require('./routes/index');
 
@@ -8,6 +9,11 @@ const moviesRoutes = require('./routes/moviesRoutes');
 const genresRoutes = require('./routes/genresRoutes');
 const app = express();
 
+app.use(session({
+    secret:"Esto es un secreto",
+    resave: false,
+    saveUninitialized: false
+}))
 app.use(express.urlencoded({ extended: false}));
 app.use(express.json());
 

@@ -19,27 +19,27 @@
             
 
             <label for="title">Title</label>
-            <p><input type="text" name="title" id="" value="<%= movie.title %>"></p>
+            <p><input type="text" name="title" id="" value="<%= locals.oldData ? oldData.title : movie.title %>"></p>
             <% if (locals.errors && locals.errors.title) { %>
                 <p style="color:red"><%= errors.title.msg %></p>
             <% } %>
             <label for="rating">Rating </label>
-            <p><input type="number" name="rating" id="" value="<%=  movie.rating %>" > </p>
+            <p><input type="number" name="rating" id="" value="<%= locals.oldData ? oldData.rating : movie.rating %>" > </p>
             <% if (locals.errors && locals.errors.rating) { %>
                 <p style="color:red"><%= errors.rating.msg %></p>
             <% } %>
             <label for="awards">Awards </label>
-            <p><input type="number" name="awards" id="" value="<%=  movie.awards %>" ></p>
+            <p><input type="number" name="awards" id="" value="<%= locals.oldData ? oldData.awards : movie.awards %>" ></p>
             <% if (locals.errors && locals.errors.awards) { %>
                 <p style="color:red"><%= errors.awards.msg %></p>
             <% } %>
             <label for="release_date">Release date </label>
-            <p><input type="date" name="release_date" id="" value="<%=  movie.release_date %>"></p>
+            <p><input type="date" name="release_date" id="" value="<%= locals.oldData ? oldData.release_date : movie.release_date %>"></p>
             <% if (locals.errors && locals.errors.release_date) { %>
                 <p style="color:red"><%= errors.release_date.msg %></p>
             <% } %>
             <label for="length">Length </label>
-            <p><input type="number" name="length" id="" value="<%=  movie.length %>"></p>
+            <p><input type="number" name="length" id="" value="<%= locals.oldData ? oldData.length : movie.length %>"></p>
             <% if (locals.errors && locals.errors.length) { %>
                 <p style="color:red"><%= errors.length.msg %></p>
             <% } %>

@@ -74,6 +74,7 @@ const controller = {
   edit: async (req, res) => {
     try {
       const movie = await db.Movie.findByPk(req.params.id);
+      req.session.movieToEdit = movie
       res.render("moviesEdit", { movie: movie });
     } catch (error) {
       return res.send({ error });
@@ -94,7 +95,8 @@ const controller = {
     if (!errors.isEmpty()) {
       return res.render("moviesEdit", {
         errors: errors.mapped(),
-        movie: movie,
+        movie: req.session.movieToEdit,
+        oldData: movie
       });
     }
 
