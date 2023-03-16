@@ -74,7 +74,7 @@ const controller = {
   edit: async (req, res) => {
     try {
       const movie = await db.Movie.findByPk(req.params.id);
-      req.session.movieToEdit = movie
+      // req.session.movieToEdit = movie
       res.render("moviesEdit", { movie: movie });
     } catch (error) {
       return res.send({ error });
@@ -84,23 +84,26 @@ const controller = {
   update: async (req, res) => {
     const errors = validationResult(req);
 
-    const movie = {
-      title: req.body.title,
-      rating: req.body.rating,
-      awards: req.body.awards,
-      release_date: req.body.release_date,
-      length: req.body.length,
-    };
-
     if (!errors.isEmpty()) {
-      return res.render("moviesEdit", {
-        errors: errors.mapped(),
-        movie: req.session.movieToEdit,
-        oldData: movie
-      });
+      try {
+        const movie = await db.Movie.findByPk(req.params.id);
+        return res.render("moviesEdit", {
+          errors: errors.mapped(),
+          movie: movie,
+          oldData: req.body,
+        });
+      } catch (error) {
+        return res.send({ error });
+      }
     }
-
     try {
+      const movie = {
+        title: req.body.title,
+        rating: req.body.rating,
+        awards: req.body.awards,
+        release_date: req.body.release_date,
+        length: req.body.length,
+      };
       await db.Movie.update(movie, { where: { id: req.params.id } });
       res.redirect("/movies");
     } catch (error) {
@@ -119,10 +122,10 @@ const controller = {
 
   destroy: async (req, res) => {
     try {
-        await db.Movie.destroy({ where: { id: req.params.id } });
-        res.redirect('/movies');    
+      await db.Movie.destroy({ where: { id: req.params.id } });
+      res.redirect("/movies");
     } catch (error) {
-        return res.send(error);
+      return res.send(error);
     }
   },
 };
