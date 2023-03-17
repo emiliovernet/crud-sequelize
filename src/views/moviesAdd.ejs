@@ -41,12 +41,24 @@
             <% if (locals.errors && locals.errors.length) { %>
                 <p style="color:red"><%= errors.length.msg %></p>
             <% } %>
+            
+            <select name="genre">
+                <option selected>Seleccion el género</option>
+                <% genre.forEach(genre => { %>
+                 <option value="<%= genre.id %>"><%= genre.name %></option>
+                <% }) %>
+            </select>
 
             <br>
+
             <p> <button class="botonAgregar" type="submit">Agregar</button>
             
-            <a  class="botonVolver" href="/movies">Listado de Películas</a></p>
-        </form>
+            </form>
+
+            <br>
+
+            <a href="/movies"><button>Volver al listado</button></a>
+
     </section>
     
 </body>

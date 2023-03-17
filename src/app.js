@@ -7,6 +7,7 @@ const indexRouter = require('./routes/index');
 
 const moviesRoutes = require('./routes/moviesRoutes');
 const genresRoutes = require('./routes/genresRoutes');
+const actorsRoutes = require('./routes/actorsRoutes');
 const app = express();
 
 app.use(session({
@@ -26,5 +27,6 @@ app.use(methodOverride('_method'));
 app.use('/', indexRouter);
 app.use(moviesRoutes);
 app.use(genresRoutes);
+app.use(actorsRoutes);
 
 app.listen('3001', () => console.log('Servidor corriendo en http://localhost:3001/'));

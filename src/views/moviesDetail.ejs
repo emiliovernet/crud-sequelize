@@ -1,29 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= movie.title %> </title>
+    <title>
+        <%= movie.title %>
+    </title>
     <link rel='stylesheet' href='/css/style.css' />
 
 </head>
+
 <body>
     <figure>
         <img src="/img/logo-DH.png" alt="Logo Digital House">
     </figure>
-    <h1><%= movie.title %> </h1>    
+    <h1>
+        <%= movie.title %>
+    </h1>
     <br>
-    <p>RATING: <%= movie.rating %> </p>
-    <p>AWARDS: <%= movie.awards %> </p>
-    <p>LENGTH: <%= movie.length + ' min'%> </p>
-    <p>RELEASE DATE: <%= movie.release_date %> </p>
+    <ul>
+        <li>Rating: <%= movie.rating %></li>
+        <li>Awards: <%= movie.awards %></li>
+        <li>Length: <%= movie.length + ' min' %></li>
+        <li>Release Date: <%= movie.release_date %></li>
+        <li>Genre: <%= movie.genre ? movie.genre.name : 'No tiene genero' %></li>
+        <% if (movie.actors.length > 0) { %>
+        <li>Actores: 
+            <ul style="padding-left: 20px;">
+                <% movie.actors.forEach(actor => { %>
+                <li><%= actor.first_name %> <%= actor.last_name %></li>
+                <% }) %>
+            </ul>
+        </li>
+        <% } %>
+    </ul>
+    
+
     <br>
     <form action="/movies/edit/<%= movie.id %>">
         <button class="botonAgregar" type="submit">Editar</button>
     </form>
     <br>
     <form action="/movies/delete/<%= movie.id %>" method="GET">
-        <button  type="submit">Borrar</button>
+        <button type="submit">Borrar</button>
     </form>
+    <br>
+    <a href="/movies"><button>Volver al listado</button></a>
 </body>
+
 </html>

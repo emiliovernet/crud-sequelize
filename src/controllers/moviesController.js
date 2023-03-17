@@ -12,8 +12,11 @@ const controller = {
 
   detail: async (req, res) => {
     try {
-      const movie = await db.Movie.findByPk(req.params.id);
+      const movie = await db.Movie.findByPk(req.params.id, {
+        include: ["genre", "actors"],
+      });
       res.render("moviesDetail", { movie });
+      
     } catch (error) {
       res.send(error);
     }
@@ -41,8 +44,14 @@ const controller = {
     }
   },
 
-  add: function (req, res) {
-    res.render("moviesAdd");
+  add: async (req, res) => {
+    try {
+      const genres = await db.Genre.findAll();
+      res.render("moviesAdd", { genre: genres });
+
+    } catch (error) {
+      res.send({ error });
+    }
   },
 
   create: async (req, res) => {
@@ -61,6 +70,7 @@ const controller = {
       awards: req.body.awards,
       release_date: req.body.release_date,
       length: req.body.length,
+      genre_id: req.body.genre
     };
 
     try {
@@ -74,8 +84,9 @@ const controller = {
   edit: async (req, res) => {
     try {
       const movie = await db.Movie.findByPk(req.params.id);
-      // req.session.movieToEdit = movie
-      res.render("moviesEdit", { movie: movie });
+      const genres = await db.Genre.findAll();
+      
+       return res.render("moviesEdit", { movie, genres });
     } catch (error) {
       return res.send({ error });
     }
@@ -87,9 +98,11 @@ const controller = {
     if (!errors.isEmpty()) {
       try {
         const movie = await db.Movie.findByPk(req.params.id);
+        const genres = await db.Genre.findAll();
         return res.render("moviesEdit", {
           errors: errors.mapped(),
           movie: movie,
+          genres: genres,
           oldData: req.body,
         });
       } catch (error) {
@@ -103,6 +116,7 @@ const controller = {
         awards: req.body.awards,
         release_date: req.body.release_date,
         length: req.body.length,
+        genre_id: req.body.genre
       };
       await db.Movie.update(movie, { where: { id: req.params.id } });
       res.redirect("/movies");
