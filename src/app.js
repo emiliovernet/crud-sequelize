@@ -4,10 +4,13 @@ const methodOverride = require('method-override')
 const session = require("express-session")
 
 const indexRouter = require('./routes/index');
-
 const moviesRoutes = require('./routes/moviesRoutes');
 const genresRoutes = require('./routes/genresRoutes');
 const actorsRoutes = require('./routes/actorsRoutes');
+// Require Routes API
+const apiGenresRoutes = require('./routes/api/genresRouter');
+const apiMoviesRoutes = require('./routes/api/moviesRouter');
+// End Require Routes API
 const app = express();
 
 app.use(session({
@@ -28,5 +31,9 @@ app.use('/', indexRouter);
 app.use(moviesRoutes);
 app.use(genresRoutes);
 app.use(actorsRoutes);
+// Routes API
+app.use('/api/genres', apiGenresRoutes);
+app.use('/api/movies', apiMoviesRoutes);
+// End Routes API
 
 app.listen('3001', () => console.log('Servidor corriendo en http://localhost:3001/'));

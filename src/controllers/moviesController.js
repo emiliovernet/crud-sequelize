@@ -58,10 +58,17 @@ const controller = {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return res.render("moviesAdd", {
-        errors: errors.mapped(),
-        oldData: req.body,
-      });
+      try {
+        const genres = await db.Genre.findAll();
+        return res.render("moviesAdd", {
+          errors: errors.mapped(),
+          oldData: req.body,
+          genre: genres
+        });
+
+      } catch (error) {
+        res.send({ error });
+      }
     }
 
     const newMovie = {
