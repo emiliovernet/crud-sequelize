@@ -1,5 +1,8 @@
 const db = require("../database/models");
 const { validationResult } = require("express-validator");
+const { Op } = require("sequelize");
+const fetch = require("node-fetch");
+require("dotenv").config();
 const controller = {
   list: async (req, res) => {
     try {
@@ -16,7 +19,6 @@ const controller = {
         include: ["genre", "actors"],
       });
       res.render("moviesDetail", { movie });
-      
     } catch (error) {
       res.send(error);
     }
@@ -48,7 +50,6 @@ const controller = {
     try {
       const genres = await db.Genre.findAll();
       res.render("moviesAdd", { genre: genres });
-
     } catch (error) {
       res.send({ error });
     }
@@ -63,9 +64,8 @@ const controller = {
         return res.render("moviesAdd", {
           errors: errors.mapped(),
           oldData: req.body,
-          genre: genres
+          genre: genres,
         });
-
       } catch (error) {
         res.send({ error });
       }
@@ -77,7 +77,7 @@ const controller = {
       awards: req.body.awards,
       release_date: req.body.release_date,
       length: req.body.length,
-      genre_id: req.body.genre
+      genre_id: req.body.genre,
     };
 
     try {
@@ -92,8 +92,8 @@ const controller = {
     try {
       const movie = await db.Movie.findByPk(req.params.id);
       const genres = await db.Genre.findAll();
-      
-       return res.render("moviesEdit", { movie, genres });
+
+      return res.render("moviesEdit", { movie, genres });
     } catch (error) {
       return res.send({ error });
     }
@@ -123,7 +123,7 @@ const controller = {
         awards: req.body.awards,
         release_date: req.body.release_date,
         length: req.body.length,
-        genre_id: req.body.genre
+        genre_id: req.body.genre,
       };
       await db.Movie.update(movie, { where: { id: req.params.id } });
       res.redirect("/movies");
@@ -149,6 +149,39 @@ const controller = {
       return res.send(error);
     }
   },
-};
+
+  search: async (req, res) => {
+    try {
+        const { q } = req.query;
+        const movies = await db.Movie.findAll({
+            where: {
+                title: { [Op.like]: `%${q}%` }
+            }
+        });
+        if (movies.length === 0) {
+            const url = `http://www.omdbapi.com/?s=${q}&type=movie&apikey=${process.env.OMDB_API_KEY}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.Error) {
+                return res.status(404).send({
+                    status: 404,
+                    message:'Pelicula no encontrada!'
+                });
+            }
+            const moviesToStore = data.Search?.map(element => ({
+                title: element.Title,
+                rating: 1,
+                awards: 1,
+                release_date: `${element.Year}-01-01`
+            }));
+            const moviesCreated = await db.Movie.bulkCreate(moviesToStore);
+            return res.send(moviesCreated);
+        }
+        return res.send(movies);
+    } catch (error) {
+        return res.json({error});
+    }
+}
+}
 
 module.exports = controller;
